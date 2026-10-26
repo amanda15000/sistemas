@@ -17,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         try {
             $stmt = $pdo->prepare("INSERT INTO usuario (nome_usuario, email_usuario, senha_usuario, perfil_usuario) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$nome, $email, password_hash($senha, PASSWORD_DEFAULT), $perfil]);
+            // Modificado: Salvando a senha em texto puro, sem nenhuma criptografia
+            $stmt->execute([$nome, $email, $senha, $perfil]);
             $ok = 'Cadastro realizado! Perfil: ' . $perfil . '. Já pode fazer login.';
         } catch (PDOException $e) {
             $erro = 'Este e-mail já está cadastrado.';
