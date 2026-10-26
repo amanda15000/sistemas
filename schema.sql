@@ -1,6 +1,8 @@
 CREATE DATABASE IF NOT EXISTS chamados CHARACTER SET utf8mb4;
 USE chamados;
 
+
+-- Entidade USUARIO (perfis: admin, tecnico, usuario)
 CREATE TABLE IF NOT EXISTS usuario (
   id_usuario INT AUTO_INCREMENT PRIMARY KEY,
   nome_usuario VARCHAR(100) NOT NULL,
@@ -9,17 +11,22 @@ CREATE TABLE IF NOT EXISTS usuario (
   perfil_usuario ENUM('admin','tecnico','usuario') DEFAULT 'usuario'
 );
 
+
+-- Entidade CATEGORIA (nome único, sem duplicidade)
 CREATE TABLE IF NOT EXISTS categoria (
   id_categoria INT AUTO_INCREMENT PRIMARY KEY,
-  nome_categoria VARCHAR(100) NOT NULL
+  nome_categoria VARCHAR(100) NOT NULL UNIQUE
 );
 
+
+-- Entidade CHAMADO
+-- abre -> id_usuario | atende -> id_tecnico | classifica -> id_categoria
 CREATE TABLE IF NOT EXISTS chamado (
   id_chamado INT AUTO_INCREMENT PRIMARY KEY,
   titulo_chamado VARCHAR(150) NOT NULL,
   descricao_chamado TEXT NOT NULL,
   prioridade_chamado ENUM('baixa','media','alta') DEFAULT 'media',
-  status_chamado ENUM('aberto','em_andamento','resolvido','fechado') DEFAULT 'aberto',
+  status_chamado ENUM('aberto','em_andamento','pendente','resolvido','fechado') DEFAULT 'aberto',
   data_registro_chamado DATETIME DEFAULT CURRENT_TIMESTAMP,
   id_usuario INT NOT NULL,
   id_tecnico INT NULL,
@@ -29,6 +36,9 @@ CREATE TABLE IF NOT EXISTS chamado (
   FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
 );
 
+
+-- Entidade HISTORICO
+-- possui -> id_chamado
 CREATE TABLE IF NOT EXISTS historico (
   id_historico INT AUTO_INCREMENT PRIMARY KEY,
   descricao_historico TEXT NOT NULL,
@@ -37,8 +47,20 @@ CREATE TABLE IF NOT EXISTS historico (
   FOREIGN KEY (id_chamado) REFERENCES chamado(id_chamado)
 );
 
--- Categorias iniciais
-INSERT INTO categoria (nome_categoria) VALUES
+
+-- Entidade ANEXO (arquivos do chamado)
+CREATE TABLE IF NOT EXISTS anexo (
+  id_anexo INT AUTO_INCREMENT PRIMARY KEY,
+  nome_original VARCHAR(255) NOT NULL,
+  nome_arquivo VARCHAR(255) NOT NULL,
+  data_registro_anexo DATETIME DEFAULT CURRENT_TIMESTAMP,
+  id_chamado INT NOT NULL,
+  FOREIGN KEY (id_chamado) REFERENCES chamado(id_chamado)
+);
+
+
+-- Categorias iniciais (INSERT IGNORE: não duplica se rodar de novo)
+INSERT IGNORE INTO categoria (nome_categoria) VALUES
 ('Hardware'),
 ('Software'),
 ('Rede'),
