@@ -49,13 +49,13 @@ C:\xampp\htdocs\sistema_chamados
 No navegador, acesse (use a porta do **seu** Apache: `80` é o padrão e não aparece na URL, e `8080` é comum quando a 80 está ocupada):
 
 ```
-http://localhost/sistema_chamados/public/
+http://localhost/sistema-chamados/sistema-chamado/public/login.php
 ```
 
 ou, se o seu Apache estiver na porta 8080:
 
 ```
-http://localhost:8080/sistema_chamados/public/
+http://localhost:8080/sistema-chamados/sistema-chamado/public/login.php
 ```
 
 Para saber a porta, veja a coluna **Port(s)** do Apache no XAMPP Control Panel.

@@ -10,12 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([$email]);
     $u = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Modificado: Comparando os textos puros de forma segura contra timing attacks
-    if ($u && hash_equals($u['senha_usuario'], $senha)) {
+    // Valida a senha digitada com a hash do banco
+    if ($u && password_verify($senha, $u['senha_usuario'])) {
         session_regenerate_id(true);
         $_SESSION['usuario'] = [
-            'id' => $u['id_usuario'],
-            'nome' => $u['nome_usuario'],
+            'id'     => $u['id_usuario'],
+            'nome'   => $u['nome_usuario'],
             'perfil' => $u['perfil_usuario'],
         ];
         header('Location: painel.php');
